@@ -9,6 +9,7 @@ const elementos = {
   contador: document.querySelector("#contador-resultados"),
   estadoVacio: document.querySelector("#estado-vacio"),
   limpiarFiltros: document.querySelector("#limpiar-filtros"),
+  mostrarAleatorio: document.querySelector("#mostrar-aleatorio"),
   mensajeError: document.querySelector("#mensaje-error")
 };
 
@@ -108,7 +109,7 @@ function actualizarContador(cantidadMostrada, cantidadTotalFiltrada) {
     elementos.contador.textContent =
       total <= MAXIMO_TARJETAS_VISIBLES
         ? `${total} contenidos disponibles`
-        : `Mostrando ${cantidadMostrada} de ${total} contenidos disponibles`;
+        : `Mostrando ${cantidadMostrada} signos aleatorios de ${total} contenidos disponibles`;
     return;
   }
 
@@ -126,7 +127,7 @@ function actualizarContador(cantidadMostrada, cantidadTotalFiltrada) {
   }
 
   elementos.contador.textContent =
-    `Mostrando ${cantidadMostrada} de ${cantidadTotalFiltrada} resultados encontrados`;
+    `Mostrando ${cantidadMostrada} signos aleatorios de ${cantidadTotalFiltrada} resultados encontrados`;
 }
 
 function renderizar() {
@@ -142,7 +143,22 @@ function renderizar() {
   elementos.lista.hidden = resultados.length === 0;
   elementos.estadoVacio.hidden = resultados.length !== 0;
 
+  if (elementos.mostrarAleatorio) {
+    elementos.mostrarAleatorio.hidden = resultados.length <= MAXIMO_TARJETAS_VISIBLES;
+  }
+
   actualizarContador(resultadosVisibles.length, resultados.length);
+}
+
+function mostrarMasSignos() {
+  renderizar();
+
+  if (elementos.lista) {
+    elementos.lista.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
 }
 
 function seleccionarCategoria(botonSeleccionado) {
@@ -160,7 +176,11 @@ function seleccionarCategoria(botonSeleccionado) {
 function restablecerVista() {
   elementos.buscador.value = "";
   const botonTodas = elementos.filtros.find((boton) => boton.dataset.categoria === "todas");
-  seleccionarCategoria(botonTodas);
+
+  if (botonTodas) {
+    seleccionarCategoria(botonTodas);
+  }
+
   elementos.buscador.focus();
 }
 
@@ -187,6 +207,10 @@ async function cargarContenidos() {
     elementos.lista.hidden = true;
     elementos.contador.textContent = "Contenido no disponible";
     elementos.mensajeError.hidden = false;
+
+    if (elementos.mostrarAleatorio) {
+      elementos.mostrarAleatorio.hidden = true;
+    }
   }
 }
 
@@ -196,6 +220,12 @@ elementos.filtros.forEach((boton) => {
   boton.addEventListener("click", () => seleccionarCategoria(boton));
 });
 
-elementos.limpiarFiltros.addEventListener("click", restablecerVista);
+if (elementos.limpiarFiltros) {
+  elementos.limpiarFiltros.addEventListener("click", restablecerVista);
+}
+
+if (elementos.mostrarAleatorio) {
+  elementos.mostrarAleatorio.addEventListener("click", mostrarMasSignos);
+}
 
 cargarContenidos();
