@@ -22,14 +22,65 @@ const nombresCategorias = {
   "palabras-basicas": "Palabras básicas"
 };
 
+const ordenCategorias = [
+  "alfabeto",
+  "numeros",
+  "signos-basicos",
+  "vocales-acentuadas",
+  "palabras-basicas"
+];
+
+const ordenNumeros = {
+  "0": 0,
+  "cero": 0,
+  "numero cero": 0,
+  "número cero": 0,
+  "1": 1,
+  "uno": 1,
+  "numero uno": 1,
+  "número uno": 1,
+  "2": 2,
+  "dos": 2,
+  "numero dos": 2,
+  "número dos": 2,
+  "3": 3,
+  "tres": 3,
+  "numero tres": 3,
+  "número tres": 3,
+  "4": 4,
+  "cuatro": 4,
+  "numero cuatro": 4,
+  "número cuatro": 4,
+  "5": 5,
+  "cinco": 5,
+  "numero cinco": 5,
+  "número cinco": 5,
+  "6": 6,
+  "seis": 6,
+  "numero seis": 6,
+  "número seis": 6,
+  "7": 7,
+  "siete": 7,
+  "numero siete": 7,
+  "número siete": 7,
+  "8": 8,
+  "ocho": 8,
+  "numero ocho": 8,
+  "número ocho": 8,
+  "9": 9,
+  "nueve": 9,
+  "numero nueve": 9,
+  "número nueve": 9
+};
+
 let contenidos = [];
 let categoriaActiva = "todas";
 let cantidadVisible = CANTIDAD_INICIAL_VISIBLE;
 let claveResultadosActual = "";
-let resultadosAleatorios = [];
+let resultadosPreparados = [];
 
 function normalizarTexto(texto) {
-  return texto
+  return String(texto || "")
     .toLocaleLowerCase("es")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -50,6 +101,60 @@ function mezclarAleatoriamente(lista) {
 function obtenerClaveResultados() {
   const consulta = normalizarTexto(elementos.buscador.value);
   return `${categoriaActiva}|${consulta}`;
+}
+
+function obtenerOrdenCategoria(categoria) {
+  const indice = ordenCategorias.indexOf(categoria);
+  return indice === -1 ? 999 : indice;
+}
+
+function obtenerOrdenNumero(item) {
+  const nombre = normalizarTexto(item.nombre);
+  const simbolo = normalizarTexto(item.simbolo);
+
+  if (ordenNumeros[nombre] !== undefined) {
+    return ordenNumeros[nombre];
+  }
+
+  if (ordenNumeros[simbolo] !== undefined) {
+    return ordenNumeros[simbolo];
+  }
+
+  const numeroEncontrado = nombre.match(/\d+/);
+
+  if (numeroEncontrado) {
+    return Number(numeroEncontrado[0]);
+  }
+
+  return 999;
+}
+
+function ordenarResultados(lista) {
+  return [...lista].sort((a, b) => {
+    const ordenCategoriaA = obtenerOrdenCategoria(a.categoria);
+    const ordenCategoriaB = obtenerOrdenCategoria(b.categoria);
+
+    if (ordenCategoriaA !== ordenCategoriaB) {
+      return ordenCategoriaA - ordenCategoriaB;
+    }
+
+    if (a.categoria === "numeros") {
+      return obtenerOrdenNumero(a) - obtenerOrdenNumero(b);
+    }
+
+    return String(a.nombre || "").localeCompare(String(b.nombre || ""), "es", {
+      numeric: true,
+      sensitivity: "base"
+    });
+  });
+}
+
+function prepararResultados(resultados) {
+  if (categoriaActiva === "todas" && elementos.buscador.value.trim() === "") {
+    return mezclarAleatoriamente(resultados);
+  }
+
+  return ordenarResultados(resultados);
 }
 
 function crearTarjeta(item) {
@@ -130,14 +235,10 @@ function renderizar() {
   if (claveResultados !== claveResultadosActual) {
     claveResultadosActual = claveResultados;
     cantidadVisible = CANTIDAD_INICIAL_VISIBLE;
-    resultadosAleatorios = mezclarAleatoriamente(resultados);
+    resultadosPreparados = prepararResultados(resultados);
   }
 
-  if (resultadosAleatorios.length === 0 && resultados.length > 0) {
-    resultadosAleatorios = mezclarAleatoriamente(resultados);
-  }
-
-  const resultadosVisibles = resultadosAleatorios.slice(0, cantidadVisible);
+  const resultadosVisibles = resultadosPreparados.slice(0, cantidadVisible);
   const fragmento = document.createDocumentFragment();
 
   resultadosVisibles.forEach((item) => {
