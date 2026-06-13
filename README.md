@@ -50,4 +50,4 @@ Este recurso facilita la consulta visual del sistema Braille. No reemplaza el ap
 
 ## Créditos
 
-Desarrollado por Gabriel Bermúdez con apoyo institucional del CREBE "Señor de los Milagros" - Ucayali. Plataforma educativa sin fines de lucro.
+Desarrollado por Gabriel Berrospi con apoyo institucional del CREBE "Señor de los Milagros" - Ucayali. Plataforma educativa sin fines de lucro.
