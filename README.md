@@ -1,6 +1,6 @@
 # Banco Digital del Sistema Braille
 
-Primera versión funcional de una plataforma web educativa para la consulta, el reconocimiento y la práctica inicial del sistema Braille.
+Versión 1.0 funcional de una plataforma web educativa para la consulta, el reconocimiento y la práctica inicial del sistema Braille.
 
 ## Características
 
