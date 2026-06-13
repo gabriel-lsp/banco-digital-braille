@@ -11,15 +11,17 @@
   <link rel="stylesheet" href="estilos.css?v=5">
 
   <style>
-    .acceso-teoria-simple{
+    .acceso-braille{
       max-width:1100px;
-      margin:-14px auto 24px;
+      margin:18px auto 22px;
       padding:0 18px;
       display:flex;
       justify-content:flex-end;
+      position:relative;
+      z-index:2;
     }
 
-    .boton-teoria{
+    .boton-braille-teoria{
       display:inline-block;
       text-decoration:none;
       background:#0f766e;
@@ -28,21 +30,21 @@
       border-radius:999px;
       font-weight:800;
       white-space:nowrap;
-      box-shadow:0 8px 18px rgba(0,0,0,.10);
+      box-shadow:0 8px 18px rgba(0,0,0,.12);
     }
 
-    .boton-teoria:hover{
+    .boton-braille-teoria:hover{
       background:#0b4f4a;
+      color:#ffffff;
     }
 
     @media (max-width:700px){
-      .acceso-teoria-simple{
+      .acceso-braille{
         justify-content:center;
-        margin:12px auto 22px;
+        margin:16px auto 20px;
       }
 
-      .boton-teoria{
-        width:auto;
+      .boton-braille-teoria{
         text-align:center;
       }
     }
@@ -91,8 +93,8 @@
 
   <main id="contenido-principal">
 
-    <section class="acceso-teoria-simple">
-      <a href="teoria.html" class="boton-teoria">
+    <section class="acceso-braille">
+      <a href="teoria.html" class="boton-braille-teoria">
         Conoce el sistema Braille
       </a>
     </section>
